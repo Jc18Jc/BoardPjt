@@ -1,0 +1,2 @@
+Client Secret key = NzG24IRytFIY8ckTTQlRdscV3gwxKm70
+Rest Api key = 	4da5d4ea0e6b140dca3f273efc20c1e5

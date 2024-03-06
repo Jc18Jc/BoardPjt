@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.og">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <ul>
+      <li th:each="str: ${list}" th:text="${str}"></li>
+  </ul>
+  <ul>
+    <th:block th:each="str, status: ${list}">
+        <li>[[${status.index}]] - [[${str}]]</li>
+    </th:block>
+  </ul>
+</body>
+</html>
