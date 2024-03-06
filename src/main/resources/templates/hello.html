@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 th:text="${msg}"></h1>
+    <hr/>
+    <div th:with="num1 = ${10}, num2 = ${50}">
+        <h4 th:text = "${num1+num2}"></h4>
+    </div>
+    <div>
+        <a th:href="@{/hello(name='jc', age=26)}">KJC</a>
+    </div>
+</body>
+</html>
