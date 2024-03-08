@@ -41,7 +41,6 @@ public class UpDownController {
 
         if (uploadFileDTO.getFiles() != null) {
             final List<UploadResultDTO> list = new ArrayList<>();
-            List<String> uploadedFilePaths = new ArrayList<>();
             uploadFileDTO.getFiles().forEach(multipartFile -> {
                 String originalName = multipartFile.getOriginalFilename();
                 log.info(originalName);
@@ -51,19 +50,17 @@ public class UpDownController {
                 try {
                     multipartFile.transferTo(savePath); // 실제 저장
                     File saveFile = savePath.toFile();
-                    uploadedFilePaths.add(saveFile.getAbsolutePath());
+                    s3Uploader.upload(saveFile.getAbsolutePath());
                     if (Files.probeContentType(savePath).startsWith("image")) {
                         img=true;
                         File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
-                        uploadedFilePaths.add(thumbFile.getAbsolutePath());
+                        s3Uploader.upload(thumbFile.getAbsolutePath());
                         Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
                     }
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                uploadedFilePaths.stream().map(fileName -> s3Uploader.upload(fileName));
 
                 UploadResultDTO resultDTO = UploadResultDTO.builder()
                         .img(img)

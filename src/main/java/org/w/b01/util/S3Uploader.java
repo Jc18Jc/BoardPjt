@@ -21,6 +21,8 @@ public class S3Uploader {
     private final AmazonS3Client amazonS3Client;
 
     public String upload(String filePath) throws RuntimeException {
+        log.info("S3Uploader - upload -------------");
+        log.info("filePath: ", filePath);
         File targetFile = new File(filePath);
         String uploadImageUrl = putS3(targetFile, targetFile.getName());
         removeOriginalFile(targetFile);
