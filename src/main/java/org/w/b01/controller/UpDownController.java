@@ -53,9 +53,8 @@ public class UpDownController {
                     if (Files.probeContentType(savePath).startsWith("image")) {
                         img=true;
                         File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
-                        Path thumbPath = Paths.get(uploadPath, "s_" + uuid + "_" + originalName);
                         Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
-                        s3Uploader.upload(thumbPath.toFile().getAbsolutePath());
+                        s3Uploader.upload(thumbFile.getAbsolutePath());
                     }
 
                 } catch (IOException e) {
