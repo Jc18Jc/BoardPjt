@@ -49,11 +49,12 @@ public class UpDownController {
                 try {
                     multipartFile.transferTo(savePath); // 실제 저장
                     File saveFile = savePath.toFile();
-                    s3Uploader.upload(saveFile.getAbsolutePath());
+
                     if (Files.probeContentType(savePath).startsWith("image")) {
                         img=true;
                         File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
                         Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
+                        s3Uploader.upload(saveFile.getAbsolutePath());
                         s3Uploader.upload(thumbFile.getAbsolutePath());
                     }
 
