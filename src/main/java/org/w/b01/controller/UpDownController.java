@@ -46,21 +46,21 @@ public class UpDownController {
                 String uuid = UUID.randomUUID().toString();
                 boolean img = false;
                 Path savePath = Paths.get(uploadPath, uuid+"_"+originalName);
+                List<String> tmpList = new ArrayList<>();
                 try {
                     multipartFile.transferTo(savePath); // 실제 저장
                     File saveFile = savePath.toFile();
-
+                    tmpList.add(saveFile.getAbsolutePath());
                     if (Files.probeContentType(savePath).startsWith("image")) {
                         img=true;
                         File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
                         Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
-                        s3Uploader.upload(saveFile.getAbsolutePath());
-                        s3Uploader.upload(thumbFile.getAbsolutePath());
+                        tmpList.add((thumbFile.getAbsolutePath()));
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                tmpList.stream().map(fileName -> s3Uploader.upload(fileName));
 
                 UploadResultDTO resultDTO = UploadResultDTO.builder()
                         .img(img)
