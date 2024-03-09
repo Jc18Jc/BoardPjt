@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,8 +53,8 @@ public class UpDownController {
                     if (Files.probeContentType(savePath).startsWith("image")) {
                         img=true;
                         File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
-                        s3Uploader.upload(thumbFile.getAbsolutePath());
                         Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
+                        s3Uploader.upload(thumbFile.getAbsolutePath());
                     }
 
                 } catch (IOException e) {
@@ -91,7 +90,7 @@ public class UpDownController {
     }
 
     @Operation(summary = "remove 파일")
-    @DeleteMapping("/remove{fileName}")
+    @DeleteMapping("/remove/{fileName}")
     public Map<String, Boolean> removeFile(@PathVariable(name="fileName") String fileName) {
         Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
         String resourceName = resource.getFilename();
@@ -100,11 +99,11 @@ public class UpDownController {
 
         try {
             String contentType = Files.probeContentType(resource.getFile().toPath());
-            //removed = resource.getFile().delete();
+            removed = resource.getFile().delete();
             s3Uploader.removeS3File(resourceName);
             if (contentType.startsWith("image")) {
                 File thumbnailFile = new File(uploadPath+File.separator+"s_"+fileName);
-                //thumbnailFile.delete();
+                thumbnailFile.delete();
                 s3Uploader.removeS3File(thumbnailFile.getName());
             }
         } catch (Exception e) {
