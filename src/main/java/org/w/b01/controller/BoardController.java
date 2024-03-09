@@ -63,7 +63,7 @@ public class BoardController {
         model.addAttribute("dto", dto);
     }
 
-    @PreAuthorize("principal.username == #boardDTO.writer")
+    @PreAuthorize("principal.username == #dto.writer")
     @PostMapping("/modify")
     public String modifyPost(PageRequestDTO pageRequestDTO, @Valid BoardDTO dto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info(dto);
